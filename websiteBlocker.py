@@ -40,24 +40,24 @@ def Blocker():
 
 # function to unblock websites
 def Unblock():
-    # list of websites that you want to unblock
-    website_lists = enter_Website.get(1.0,END)
+    website_lists = enter_Website.get(1.0, END)
     Website = list(website_lists.split(","))
-    with open (host_path , 'r+') as host_file:
+    
+    with open(host_path, 'r') as host_file:
         file_content = host_file.readlines()
-    for web in Website:
-            if web in website_lists:
-                with open (host_path , 'r+') as f:
-                    for line in file_content:
-                        # unmapping the hostname if it is mapped
-                        if line.strip(',') != website_lists:
-                            f.write(line)
-                            Label(window, text = "UnBlocked", font = 'arial').place(x=350,y =200)
-                            pass
-                        else:
-                            # if hostname is not mapped
-                            display=Label(window, text = 'Already UnBlocked' , font = 'arial')
-                            display.place(x=350,y=200)
+    
+    with open(host_path, 'w') as host_file:
+        for line in file_content:
+            blocked = False
+            for web in Website:
+                if web in line:
+                    blocked = True
+                    break
+            if not blocked:
+                host_file.write(line)
+    
+    Label(window, text="UnBlocked", font='arial').place(x=350, y=200)
+
 
 # creating buttons
 block_button = Button(window, text = 'Block',font = 'arial',pady = 5,command = Blocker ,width = 6, bg = 'red', activebackground = 'grey')
